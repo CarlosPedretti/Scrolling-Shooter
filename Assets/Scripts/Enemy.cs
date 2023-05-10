@@ -9,6 +9,9 @@ public class Enemy : MonoBehaviour
     //public Animator animator;
 
     public Enemy enemy;
+    public CircleCollider2D circleCollider;
+
+
 
 
     public int maxHealth = 100;
@@ -20,12 +23,17 @@ public class Enemy : MonoBehaviour
     //public GameObject explosionPrefab;
 
 
+    void Awake()
+    {
 
+    }
 
     void Start()
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
+
+
     }
 
 
@@ -49,6 +57,19 @@ public class Enemy : MonoBehaviour
 
 
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Collision"))
+        {
+            CircleCollider2D circleCollider = other.GetComponent<CircleCollider2D>();
+            if (circleCollider != null)
+            {
+                circleCollider.enabled = true;
+            }
+        }
+    }
+
 
 
     public void TakeDamage(int damage)

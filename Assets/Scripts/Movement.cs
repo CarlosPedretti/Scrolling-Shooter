@@ -18,6 +18,8 @@ public class Movement : MonoBehaviour
     public GameObject BulletPrefab;
     public Transform BulletSpawn;
 
+    private bool canPassThroughWall = true;
+
 
     void Start()
     {
@@ -53,14 +55,23 @@ public class Movement : MonoBehaviour
 
     }
 
-    //Colision con camara
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.CompareTag("Wall"))
+        if (other.gameObject.CompareTag("Wall"))
         {
-            rb.velocity = Vector2.zero; 
+            if (!canPassThroughWall)
+            {
+                // Evitar que el jugador sobrepase el objeto "Wall"
+                rb.velocity = Vector2.zero;
+            }
         }
     }
+
+    /*public void TogglePassThroughWall(bool allowPassThrough)
+    {
+        canPassThroughWall = allowPassThrough;
+    }*/
+
 
 
     public void TakeDamage(int damage)
