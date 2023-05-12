@@ -5,12 +5,13 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
 
-    //public Vector2 speed = new Vector2 (20, 20);
+
 
     public int maxHealth = 100;
     public int currentHealth;
 
     public float speed = 5f;
+    public float drag = 5f;
     public Rigidbody2D rb;
 
     //private Animator Animator;
@@ -33,16 +34,17 @@ public class Movement : MonoBehaviour
         float InputY = Input.GetAxis("Vertical");
         float InputX = Input.GetAxis("Horizontal");
 
-        //Vector2 movement = new Vector2 (speed.x * InputX, speed.y * InputY);
-
-        //movement *= Time.deltaTime;
-
-        //transform.Translate(movement);
-
         Vector2 movement = new Vector2(speed * InputX, speed * InputY);
 
-        rb.velocity = movement;
+        rb.AddForce(movement * speed);
 
+
+        if (rb.velocity.magnitude > speed)
+        {
+            rb.velocity = rb.velocity.normalized * speed;
+        }
+
+        rb.velocity *= (1f - drag * Time.fixedDeltaTime);
 
 
         //Disparo
@@ -67,12 +69,6 @@ public class Movement : MonoBehaviour
         }
     }
 
-    /*public void TogglePassThroughWall(bool allowPassThrough)
-    {
-        canPassThroughWall = allowPassThrough;
-    }*/
-
-
 
     public void TakeDamage(int damage)
     {
@@ -86,8 +82,6 @@ public class Movement : MonoBehaviour
     }
 
 
-
-    
     private void Shoot()
     {
         GameObject newBulletPrefab = BulletPrefab;

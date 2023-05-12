@@ -9,8 +9,10 @@ public class Enemy : MonoBehaviour
     //public Animator animator;
 
     public Enemy enemy;
-    public CircleCollider2D circleCollider;
 
+
+    public Collider2D barrierCollider;
+    private Collider2D objectCollider;
 
 
 
@@ -25,7 +27,7 @@ public class Enemy : MonoBehaviour
 
     void Awake()
     {
-
+        objectCollider = GetComponent<Collider2D>();
     }
 
     void Start()
@@ -40,12 +42,14 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         rb.velocity = new Vector2(0, -speed);
+
     }
 
 
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+
         if (collision.gameObject.tag == "PlayerBullet")
         {
             Movement playerHealth = collision.gameObject.GetComponent<Movement>();
@@ -56,20 +60,8 @@ public class Enemy : MonoBehaviour
         }
 
 
-    }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Collision"))
-        {
-            CircleCollider2D circleCollider = other.GetComponent<CircleCollider2D>();
-            if (circleCollider != null)
-            {
-                circleCollider.enabled = true;
-            }
-        }
     }
-
 
 
     public void TakeDamage(int damage)
