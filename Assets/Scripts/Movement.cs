@@ -5,19 +5,19 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
 
+    public Movement player;
 
 
     public int maxHealth = 100;
     public int currentHealth;
+
 
     public float speed = 5f;
     public float drag = 5f;
     public Rigidbody2D rb;
 
     //private Animator Animator;
-    private float LastShoot;
-    public GameObject BulletPrefab;
-    public Transform BulletSpawn;
+
 
     private bool canPassThroughWall = true;
 
@@ -47,15 +47,25 @@ public class Movement : MonoBehaviour
         rb.velocity *= (1f - drag * Time.fixedDeltaTime);
 
 
-        //Disparo
-        if (Input.GetKey(KeyCode.Mouse0) && Time.time > LastShoot + 0.25f)
-        {
-            Shoot();
-            LastShoot = Time.time;
-        }
+
 
 
     }
+
+
+
+    /*void OnCollisionEnter2D(Collision2D collision)
+    {
+
+        if (collision.gameObject.tag == "EnemyBullet")
+        {
+            Enemy enemyHealth = collision.gameObject.GetComponent<Enemy>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(bullet.damage);
+            }
+        }
+    }*/
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -63,7 +73,7 @@ public class Movement : MonoBehaviour
         {
             if (!canPassThroughWall)
             {
-                // Evitar que el jugador sobrepase el objeto "Wall"
+
                 rb.velocity = Vector2.zero;
             }
         }
@@ -81,18 +91,12 @@ public class Movement : MonoBehaviour
 
     }
 
-
-    private void Shoot()
+    public void ResetHealth()
     {
-        GameObject newBulletPrefab = BulletPrefab;
-
-        Vector3 direction;
-        if (transform.localScale.x == 1.0f) direction = Vector3.up;
-        else direction = Vector3.up;
-
-        GameObject bullet = Instantiate(newBulletPrefab, BulletSpawn.position + direction * 0.1f, Quaternion.identity);
-        bullet.GetComponent<Bullet>().SetDirection(direction);
+        currentHealth = 0;
     }
+
+
 
 
 }

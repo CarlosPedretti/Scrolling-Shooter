@@ -11,10 +11,6 @@ public class Enemy : MonoBehaviour
     public Enemy enemy;
 
 
-    public Collider2D barrierCollider;
-    private Collider2D objectCollider;
-
-
 
     public int maxHealth = 100;
     public int currentHealth;
@@ -27,14 +23,12 @@ public class Enemy : MonoBehaviour
 
     void Awake()
     {
-        objectCollider = GetComponent<Collider2D>();
+        currentHealth = maxHealth;
+        rb = GetComponent<Rigidbody2D>();
     }
 
     void Start()
     {
-        currentHealth = maxHealth;
-        rb = GetComponent<Rigidbody2D>();
-
 
     }
 
@@ -50,18 +44,22 @@ public class Enemy : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
 
-        if (collision.gameObject.tag == "PlayerBullet")
+
+        if (collision.gameObject.tag == "Player")
         {
             Movement playerHealth = collision.gameObject.GetComponent<Movement>();
+
             if (playerHealth != null)
             {
-                playerHealth.TakeDamage(enemy.damage);
+                playerHealth.ResetHealth();
             }
+
         }
 
 
 
     }
+
 
 
     public void TakeDamage(int damage)

@@ -12,6 +12,7 @@ TagManager:
   - DownWall
   - LeftWall
   - RightWall
+  - EnemyBullet
   layers:
   - Default
   - TransparentFX

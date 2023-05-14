@@ -2,21 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class EnemyBullet : MonoBehaviour
 {
-    public float Speed = 25;
-
+    public float speed = 25f;
+    //public int Damage;
 
     private Rigidbody2D Rigidbody2D;
     private Vector3 Direction;
 
+    private Enemy enemy;
 
-    private Shots shotScript;
+
+
 
     private void Start()
     {
+
+        enemy = FindObjectOfType<Enemy>();
+
         Rigidbody2D = GetComponent<Rigidbody2D>();
-        shotScript = FindObjectOfType<Shots>();
 
 
     }
@@ -28,7 +32,7 @@ public class Bullet : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Rigidbody2D.velocity = Direction * Speed;
+        Rigidbody2D.velocity = Direction * speed;
 
     }
 
@@ -54,10 +58,10 @@ public class Bullet : MonoBehaviour
     {
 
 
-        Enemy enemy = hitInfo.GetComponent<Enemy>();
-        if (enemy != null)
+        Movement movement = hitInfo.GetComponent<Movement>();
+        if (movement != null)
         {
-            enemy.TakeDamage(shotScript.BulletDamage);
+            movement.TakeDamage(enemy.damage);
             Destroy(gameObject);
         }
         else
