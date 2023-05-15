@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject WinScene;
     [SerializeField] private TMP_Text LifeText;
 
+    public float delayBeforeGameOver = 1f;
+
 
 
 
@@ -36,7 +38,14 @@ public class GameManager : MonoBehaviour
     }
 
 
+
+
     public void ShowGameOverScreen()
+    {
+        Invoke("ShowGameOver", delayBeforeGameOver);
+    }
+
+    private void ShowGameOver()
     {
         GameOverScreen.SetActive(true);
         Time.timeScale = 0f;

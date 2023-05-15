@@ -8,11 +8,9 @@ TagManager:
   - Wall
   - PlayerBullet
   - Collision
-  - UpWall
-  - DownWall
-  - LeftWall
-  - RightWall
   - EnemyBullet
+  - PowerUp
+  - Win
   layers:
   - Default
   - TransparentFX
@@ -22,9 +20,9 @@ TagManager:
   - UI
   - CapaIgnorada1
   - CapaIgnorada2
-  - 
-  - 
-  - 
+  - Player
+  - PlayerBullet
+  - EnemyBullet
   - 
   - 
   - 

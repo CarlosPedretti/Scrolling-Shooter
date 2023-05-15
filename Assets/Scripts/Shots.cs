@@ -4,31 +4,28 @@ using UnityEngine;
 
 public class Shots : MonoBehaviour
 {
-
     private float LastShoot;
     public GameObject BulletPrefab;
     public Transform BulletSpawn;
     public Transform LBulletSpawn;
     public Transform RBulletSpawn;
     public int BulletDamage = 10;
+    private bool powerUpActive = false;
+    //private bool canShoot = true;
 
     void Start()
     {
-        
-    }
 
+    }
 
     void FixedUpdate()
     {
-
         if (Input.GetKey(KeyCode.Mouse0) && Time.time > LastShoot + 0.25f)
         {
             Shoot();
             LastShoot = Time.time;
         }
     }
-
-
 
     private void Shoot()
     {
@@ -39,10 +36,30 @@ public class Shots : MonoBehaviour
         else direction = Vector3.up;
 
         GameObject bullet = Instantiate(newBulletPrefab, BulletSpawn.position + direction * 0.1f, Quaternion.identity);
-        GameObject bullet1 = Instantiate(newBulletPrefab, LBulletSpawn.position + direction * 0.1f, Quaternion.identity);
-        GameObject bullet2 = Instantiate(newBulletPrefab, RBulletSpawn.position + direction * 0.1f, Quaternion.identity);
         bullet.GetComponent<Bullet>().SetDirection(direction);
-        bullet1.GetComponent<Bullet>().SetDirection(direction);
-        bullet2.GetComponent<Bullet>().SetDirection(direction);
+
+        if (powerUpActive == true)
+        {
+            GameObject bullet1 = Instantiate(newBulletPrefab, LBulletSpawn.position + direction * 0.1f, Quaternion.identity);
+            GameObject bullet2 = Instantiate(newBulletPrefab, RBulletSpawn.position + direction * 0.1f, Quaternion.identity);
+            bullet1.GetComponent<Bullet>().SetDirection(direction);
+            bullet2.GetComponent<Bullet>().SetDirection(direction);
+        }
+    }
+
+
+    public void ActivatePowerUp()
+    {
+        powerUpActive = true;
+
+        Debug.Log("Power-Up activated!");
+    }
+
+
+    public void DeactivatePowerUp()
+    {
+        powerUpActive = false;
+
+        Debug.Log("Power-Up deactivated!");
     }
 }

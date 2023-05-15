@@ -5,8 +5,9 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
 
-    public Movement player;
 
+
+    public Shots shotsScript;
 
     public int maxHealth = 100;
     public int currentHealth;
@@ -16,7 +17,12 @@ public class Movement : MonoBehaviour
     public float drag = 5f;
     public Rigidbody2D rb;
 
-    //private Animator Animator;
+    public GameObject explosionPrefab;
+
+    public float delay = 15f;
+
+
+
 
 
     private bool canPassThroughWall = true;
@@ -25,16 +31,17 @@ public class Movement : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+        shotsScript = GetComponent<Shots>();
     }
 
 
     void FixedUpdate()
     {
-        //Movimiento
-        float InputY = Input.GetAxis("Vertical");
-        float InputX = Input.GetAxis("Horizontal");
 
-        Vector2 movement = new Vector2(speed * InputX, speed * InputY);
+        float inputY = Input.GetAxis("Vertical");
+        float inputX = Input.GetAxis("Horizontal");
+
+        Vector2 movement = new Vector2(speed * inputX, speed * inputY);
 
         rb.AddForce(movement * speed);
 
@@ -53,19 +60,26 @@ public class Movement : MonoBehaviour
     }
 
 
-
-    /*void OnCollisionEnter2D(Collision2D collision)
+    void OnCollisionEnter2D(Collision2D colider)
     {
-
-        if (collision.gameObject.tag == "EnemyBullet")
+        if (colider.gameObject.tag == "Enemy")
         {
-            Enemy enemyHealth = collision.gameObject.GetComponent<Enemy>();
-            if (enemyHealth != null)
-            {
-                enemyHealth.TakeDamage(bullet.damage);
-            }
+            shotsScript.DeactivatePowerUp();
+
+            Enemy enemyHealth = colider.gameObject.GetComponent<Enemy>();
+
+
+                enemyHealth.EnemyDie();
+
+            Die();
+
         }
-    }*/
+        if (colider.gameObject.tag == "Win")
+        {
+            GameManager.Instance.WinScreen();
+        }
+    }
+
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -77,6 +91,16 @@ public class Movement : MonoBehaviour
                 rb.velocity = Vector2.zero;
             }
         }
+        if (other.gameObject.tag == "PowerUp")
+        {
+            shotsScript.ActivatePowerUp();
+            Destroy(other.gameObject);
+
+
+            Invoke("DeactivatePowerUp", delay);
+        }
+
+
     }
 
 
@@ -84,16 +108,31 @@ public class Movement : MonoBehaviour
     {
         currentHealth -= damage;
 
+
         if (currentHealth <= 0)
         {
-            GameManager.Instance.ShowGameOverScreen();
+            Die();
         }
 
+    }
+
+    private void Die()
+    {
+
+        GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(explosion, 0.4f);
+        Destroy(gameObject);
+        GameManager.Instance.ShowGameOverScreen();
     }
 
     public void ResetHealth()
     {
         currentHealth = 0;
+    }
+
+    private void DeactivatePowerUp()
+    {
+        shotsScript.DeactivatePowerUp();
     }
 
 
